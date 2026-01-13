@@ -29,17 +29,18 @@ struct BubbleView: View {
                 }
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
         .background(
             VisualEffectView(material: .hudWindow, blendingMode: .withinWindow)
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 0.5)
                 )
+                .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
         )
-        .frame(minWidth: 150)
+        .padding(4) // Extra space for shadow/glow
     }
     
     var stateText: String {

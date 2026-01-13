@@ -1,9 +1,13 @@
 import Foundation
 
 class STTService {
-    private let apiKey = "" // User needs to replace this
     
     func transcribe(audioURL: URL, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let apiKey = KeychainHelper.shared.load(), !apiKey.isEmpty else {
+            completion(.failure(NSError(domain: "STTService", code: -3, userInfo: [NSLocalizedDescriptionKey: "Deepgram API key not set. Please open Settings."])))
+            return
+        }
+        
         let url = URL(string: "https://api.deepgram.com/v1/listen?model=nova-2&smart_format=true")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

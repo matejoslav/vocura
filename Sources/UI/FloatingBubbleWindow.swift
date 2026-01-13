@@ -33,9 +33,38 @@ class WindowManager: ObservableObject {
         let bubbleView = BubbleView(viewModel: self)
         let hostingView = NSHostingView(rootView: bubbleView)
         
-        let window = FloatingBubbleWindow(contentRect: NSRect(x: 0, y: 0, width: 250, height: 100))
+        let window = FloatingBubbleWindow(contentRect: NSRect(x: 0, y: 0, width: 200, height: 100))
         window.contentView = hostingView
         self.window = window
+        
+        // Listen for internal layout changes in the hosting view
+        hostingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Update window size whenever state changes that might affect the view's size
+        self.$isRecording
+            .combineLatest(self.$isProcessing, self.$statusMessage)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateWindowSize()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateWindowSize() {
+        guard let window = window, let hostingView = window.contentView as? NSHostingView<BubbleView> else { return }
+        
+        // Calculate fitting size
+        let fittingSize = hostingView.fittingSize
+        
+        // Update window frame while keeping it at the same bottom-left corner (or relative position)
+        if let screen = NSScreen.main {
+            let screenRect = screen.visibleFrame
+            let x = screenRect.minX + 20
+            let y = screenRect.minY + 20
+            
+            let newFrame = NSRect(x: x, y: y, width: fittingSize.width, height: fittingSize.height)
+            window.setFrame(newFrame, display: true, animate: true)
+        }
     }
     
     func toggleRecording() {
@@ -122,7 +151,6 @@ class FloatingBubbleWindow: NSPanel {
     }
     
     func show() {
-        updatePosition()
         self.orderFront(nil)
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.3
