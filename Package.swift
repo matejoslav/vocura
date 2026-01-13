@@ -2,19 +2,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "VoiceText",
+    name: "Vocura",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "VoiceText", targets: ["VoiceText"])
+        .executable(name: "Vocura", targets: ["Vocura"])
     ],
     dependencies: [],
     targets: [
         .executableTarget(
-            name: "VoiceText",
+            name: "Vocura",
             dependencies: [],
-            path: "Sources"
+            path: "Sources",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )

@@ -3,7 +3,7 @@ import Security
 
 class KeychainHelper {
     static let shared = KeychainHelper()
-    private let service = "com.voicetext.app"
+    private let service = "com.vocura.app"
     private let account = "deepgram-api-key"
     
     func save(_ value: String) -> Bool {
