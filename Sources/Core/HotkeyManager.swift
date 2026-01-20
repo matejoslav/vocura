@@ -17,11 +17,7 @@ class HotkeyManager {
         let carbonKeyCode = UInt32(shortcut.keyCode)
         let id = carbonKeyCode + carbonModifiers
         
-        // If already registered, don't re-register if we don't handle unregistering properly. 
-        // Ideally we unregister first if we are replacing.
-        // For simplicity, we can assume this ID is unique enough for our single hotkey case,
-        // or we check if it exists.
-        
+        // Remove existing if present (simple replacement strategy)
         if hotkeyRefs[id] != nil {
             unregister(id: id)
         }
@@ -29,7 +25,8 @@ class HotkeyManager {
         actions[id] = action
         
         var hotkeyRef: EventHotKeyRef?
-        let hotkeyID = EventHotKeyID(signature: UTGetOSTypeFromString("VTXT" as CFString), id: id)
+        let signature = UTGetOSTypeFromString("VTXT" as CFString)
+        let hotkeyID = EventHotKeyID(signature: signature, id: id)
         
         let status = RegisterEventHotKey(carbonKeyCode, carbonModifiers, hotkeyID, GetApplicationEventTarget(), 0, &hotkeyRef)
         
@@ -41,10 +38,8 @@ class HotkeyManager {
     }
     
     func unregisterAll() {
-        for (id, ref) in hotkeyRefs {
-            UnregisterEventHotKey(ref)
-            hotkeyRefs.removeValue(forKey: id)
-            actions.removeValue(forKey: id)
+        for (id, _) in hotkeyRefs {
+            unregister(id: id)
         }
     }
     
@@ -61,14 +56,21 @@ class HotkeyManager {
             EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
         ]
         
-        let handler: EventHandlerUPP = { (_, event, userData) -> OSStatus in
+        let handler: EventHandlerUPP = { (_, event, _) -> OSStatus in
             guard let event = event else { return OSStatus(eventNotHandledErr) }
             
             var hotkeyID = EventHotKeyID()
-            let status = GetEventParameter(event, EventParamName(kEventParamDirectObject), EventParamType(typeEventHotKeyID), nil, MemoryLayout<EventHotKeyID>.size, nil, &hotkeyID)
+            let status = GetEventParameter(
+                event,
+                EventParamName(kEventParamDirectObject),
+                EventParamType(typeEventHotKeyID),
+                nil,
+                MemoryLayout<EventHotKeyID>.size,
+                nil,
+                &hotkeyID
+            )
             
             if status == noErr {
-                // Access shared instance directly since we are singleton now
                 HotkeyManager.shared.actions[hotkeyID.id]?()
                 return noErr
             }
@@ -87,14 +89,14 @@ class HotkeyManager {
         if modifiers.contains(.control) { result |= UInt32(controlKey) }
         return result
     }
-}
-
-func UTGetOSTypeFromString(_ string: CFString) -> OSType {
-    var result: OSType = 0
-    if let data = (string as String).data(using: .ascii) {
-        for byte in data {
-            result = (result << 8) | OSType(byte)
+    
+    private func UTGetOSTypeFromString(_ string: CFString) -> OSType {
+        var result: OSType = 0
+        if let data = (string as String).data(using: .ascii) {
+            for byte in data {
+                result = (result << 8) | OSType(byte)
+            }
         }
+        return result
     }
-    return result
 }

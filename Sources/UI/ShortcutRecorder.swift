@@ -6,27 +6,30 @@ struct ShortcutRecorder: View {
     @State private var isRecording = false
     @State private var monitor: Any?
     
+    // Modifier key codes to ignore when triggered alone
+    private let modifierKeyCodes: Set<UInt16> = [
+        55, // Command
+        56, // Shift
+        58, // Option
+        59, // Control
+        60, // Right Shift
+        61, // Right Option
+        62, // Right Control
+        63  // Function
+    ]
+    
     var body: some View {
-        Button(action: {
-            if isRecording {
-                stopRecording()
-            } else {
-                startRecording()
-            }
-        }) {
+        Button(action: toggleRecording) {
             HStack {
                 if isRecording {
                     Text("Press new shortcut...")
+                        .foregroundColor(.secondary)
+                    Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 } else if let shortcut = shortcut {
                     Text(shortcut.description)
                 } else {
                     Text("Click to record")
-                        .foregroundColor(.secondary)
-                }
-                
-                if isRecording {
-                    Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }
             }
@@ -44,13 +47,19 @@ struct ShortcutRecorder: View {
         }
     }
     
+    private func toggleRecording() {
+        if isRecording {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+    
     private func startRecording() {
         isRecording = true
         monitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event in
             // Ignore just modifier key presses
-            if event.keyCode == 55 || event.keyCode == 56 || event.keyCode == 58 || 
-               event.keyCode == 59 || event.keyCode == 60 || event.keyCode == 61 || 
-               event.keyCode == 62 || event.keyCode == 63 { 
+            if self.modifierKeyCodes.contains(event.keyCode) {
                 return event
             }
             

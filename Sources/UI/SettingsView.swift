@@ -1,14 +1,13 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var apiKey: String = ""
-    @State private var hotkey: KeyShortcut?
+    @EnvironmentObject var settingsManager: SettingsManager
     @State private var showingSaveSuccess = false
     
     var body: some View {
         Form {
             Section {
-                SecureField("Deepgram API Key", text: $apiKey)
+                SecureField("Deepgram API Key", text: $settingsManager.apiKey)
                     .textFieldStyle(.roundedBorder)
                 
                 Text("Get your key at [console.deepgram.com](https://console.deepgram.com)")
@@ -22,7 +21,7 @@ struct SettingsView: View {
                 HStack {
                     Text("Toggle Hotkey:")
                     Spacer()
-                    ShortcutRecorder(shortcut: $hotkey)
+                    ShortcutRecorder(shortcut: $settingsManager.hotkey)
                 }
             } header: {
                 Text("General")
@@ -37,54 +36,17 @@ struct SettingsView: View {
             HStack {
                 Spacer()
                 Button("Save Settings") {
-                    saveSettings()
+                    // Settings are saved automatically via bindings in SettingsManager
+                    // But we can simulate a "save" action for user feedback
+                    showingSaveSuccess = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        showingSaveSuccess = false
+                    }
                 }
                 .buttonStyle(.borderedProminent)
             }
         }
         .padding()
         .frame(width: 400, height: 250)
-        .onAppear {
-            loadSettings()
-        }
-    }
-    
-    private func loadSettings() {
-        if let savedKey = KeychainHelper.shared.load() {
-            apiKey = savedKey
-        }
-        
-        if let data = UserDefaults.standard.data(forKey: "customHotkey"),
-           let savedHotkey = try? JSONDecoder().decode(KeyShortcut.self, from: data) {
-            hotkey = savedHotkey
-        } else {
-            // Default ⇧⌘Space
-            hotkey = KeyShortcut(keyCode: 49, modifiers: NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
-        }
-    }
-    
-    private func saveSettings() {
-        var success = true
-        
-        if !KeychainHelper.shared.save(apiKey) {
-            success = false
-        }
-        
-        if let hotkey = hotkey, let encoded = try? JSONEncoder().encode(hotkey) {
-            UserDefaults.standard.set(encoded, forKey: "customHotkey")
-            
-            // Re-register hotkey
-            HotkeyManager.shared.unregisterAll()
-            HotkeyManager.shared.register(shortcut: hotkey) {
-                WindowManager.shared.toggleRecording()
-            }
-        }
-        
-        if success {
-            showingSaveSuccess = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                showingSaveSuccess = false
-            }
-        }
     }
 }

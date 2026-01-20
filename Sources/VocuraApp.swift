@@ -4,28 +4,31 @@ import AppKit
 @main
 struct VocuraApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    // Ensure SettingsManager is initialized
+    @StateObject private var settingsManager = SettingsManager.shared
     
     var body: some Scene {
         Window("Settings", id: "settings") {
             SettingsView()
+                .environmentObject(settingsManager)
         }
     }
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
-    let windowManager = WindowManager.shared
-    // let hotkeyManager = HotkeyManager() // Singleton now
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
-        setupHotkeys()
         
         // Ensure the app doesn't show in the dock
         NSApp.setActivationPolicy(.accessory)
         
         // Prompt for accessibility permissions once at startup
         requestAccessibilityPermissions()
+        
+        // Initialize hotkeys via SettingsManager
+        SettingsManager.shared.registerHotkey()
     }
     
     private func requestAccessibilityPermissions() {
@@ -36,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func setupMenuBar() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem?.button {
-            if let image = NSImage(named: NSImage.Name("AppIcon")) { // Assumes AppIcon is in the asset catalog or resources
+            if let image = NSImage(named: NSImage.Name("AppIcon")) {
                 image.size = NSSize(width: 18, height: 18)
                 image.isTemplate = true
                 button.image = image
@@ -46,45 +49,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 image.isTemplate = true
                 button.image = image
             } else {
-                 button.image = NSImage(systemSymbolName: "waveform.circle", accessibilityDescription: "Vocura")
+                 button.image = NSImage(systemSymbolName: "waveform.circle", accessibilityDescription: Constants.App.name)
             }
         }
         
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ","))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit Vocura", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit \(Constants.App.name)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusItem?.menu = menu
     }
     
     @objc func openSettings() {
         NSApp.activate(ignoringOtherApps: true)
-        if let url = URL(string: "vocura://settings") {
-            // Using Workspace to open just in case, but typically we can use NSApp to show a window
-        }
-        // Simplified open window for this setup:
+        
         let selector = NSSelectorFromString("showSettingsWindow:")
         if NSApp.responds(to: selector) {
             NSApp.perform(selector)
         } else {
             // Fallback for single window apps
             NSApp.windows.first(where: { $0.identifier?.rawValue == "settings" })?.makeKeyAndOrderFront(nil)
-        }
-    }
-    
-    func setupHotkeys() {
-        let hotkey: KeyShortcut
-        
-        if let data = UserDefaults.standard.data(forKey: "customHotkey"),
-           let savedHotkey = try? JSONDecoder().decode(KeyShortcut.self, from: data) {
-            hotkey = savedHotkey
-        } else {
-            // Default ⇧⌘Space
-            hotkey = KeyShortcut(keyCode: 49, modifiers: NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
-        }
-        
-        HotkeyManager.shared.register(shortcut: hotkey) {
-            self.windowManager.toggleRecording()
         }
     }
 }
