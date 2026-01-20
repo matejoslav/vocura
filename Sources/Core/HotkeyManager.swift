@@ -2,18 +2,29 @@ import AppKit
 import Carbon
 
 class HotkeyManager {
+    static let shared = HotkeyManager()
+    
     typealias HotkeyAction = () -> Void
     private var actions: [UInt32: HotkeyAction] = [:]
     private var hotkeyRefs: [UInt32: EventHotKeyRef] = [:]
     
-    init() {
+    private init() {
         setupEventHandler()
     }
     
-    func register(modifiers: NSEvent.ModifierFlags, key: KeyCode, action: @escaping HotkeyAction) {
-        let carbonModifiers = modifiersToCarbon(modifiers)
-        let carbonKeyCode = UInt32(key.rawValue)
+    func register(shortcut: KeyShortcut, action: @escaping HotkeyAction) {
+        let carbonModifiers = modifiersToCarbon(NSEvent.ModifierFlags(rawValue: shortcut.modifiers))
+        let carbonKeyCode = UInt32(shortcut.keyCode)
         let id = carbonKeyCode + carbonModifiers
+        
+        // If already registered, don't re-register if we don't handle unregistering properly. 
+        // Ideally we unregister first if we are replacing.
+        // For simplicity, we can assume this ID is unique enough for our single hotkey case,
+        // or we check if it exists.
+        
+        if hotkeyRefs[id] != nil {
+            unregister(id: id)
+        }
         
         actions[id] = action
         
@@ -29,27 +40,43 @@ class HotkeyManager {
         }
     }
     
+    func unregisterAll() {
+        for (id, ref) in hotkeyRefs {
+            UnregisterEventHotKey(ref)
+            hotkeyRefs.removeValue(forKey: id)
+            actions.removeValue(forKey: id)
+        }
+    }
+    
+    private func unregister(id: UInt32) {
+        if let ref = hotkeyRefs[id] {
+            UnregisterEventHotKey(ref)
+            hotkeyRefs.removeValue(forKey: id)
+            actions.removeValue(forKey: id)
+        }
+    }
+    
     private func setupEventHandler() {
         var eventSpec = [
             EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
         ]
         
         let handler: EventHandlerUPP = { (_, event, userData) -> OSStatus in
-            guard let event = event, let userData = userData else { return OSStatus(eventNotHandledErr) }
+            guard let event = event else { return OSStatus(eventNotHandledErr) }
             
             var hotkeyID = EventHotKeyID()
             let status = GetEventParameter(event, EventParamName(kEventParamDirectObject), EventParamType(typeEventHotKeyID), nil, MemoryLayout<EventHotKeyID>.size, nil, &hotkeyID)
             
             if status == noErr {
-                let manager = Unmanaged<HotkeyManager>.fromOpaque(userData).takeUnretainedValue()
-                manager.actions[hotkeyID.id]?()
+                // Access shared instance directly since we are singleton now
+                HotkeyManager.shared.actions[hotkeyID.id]?()
                 return noErr
             }
             
             return OSStatus(eventNotHandledErr)
         }
         
-        InstallEventHandler(GetApplicationEventTarget(), handler, 1, &eventSpec, Unmanaged.passUnretained(self).toOpaque(), nil)
+        InstallEventHandler(GetApplicationEventTarget(), handler, 1, &eventSpec, nil, nil)
     }
     
     private func modifiersToCarbon(_ modifiers: NSEvent.ModifierFlags) -> UInt32 {
@@ -60,12 +87,6 @@ class HotkeyManager {
         if modifiers.contains(.control) { result |= UInt32(controlKey) }
         return result
     }
-}
-
-enum KeyCode: CGKeyCode {
-    case v = 9
-    case space = 49
-    // Add more as needed
 }
 
 func UTGetOSTypeFromString(_ string: CFString) -> OSType {

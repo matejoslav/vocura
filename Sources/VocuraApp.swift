@@ -15,7 +15,7 @@ struct VocuraApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     let windowManager = WindowManager.shared
-    let hotkeyManager = HotkeyManager()
+    // let hotkeyManager = HotkeyManager() // Singleton now
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
@@ -73,8 +73,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func setupHotkeys() {
-        // Default hotkey: Command + Shift + Space
-        hotkeyManager.register(modifiers: [.command, .shift], key: .space) {
+        let hotkey: KeyShortcut
+        
+        if let data = UserDefaults.standard.data(forKey: "customHotkey"),
+           let savedHotkey = try? JSONDecoder().decode(KeyShortcut.self, from: data) {
+            hotkey = savedHotkey
+        } else {
+            // Default ⇧⌘Space
+            hotkey = KeyShortcut(keyCode: 49, modifiers: NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
+        }
+        
+        HotkeyManager.shared.register(shortcut: hotkey) {
             self.windowManager.toggleRecording()
         }
     }
