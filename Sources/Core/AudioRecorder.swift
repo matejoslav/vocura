@@ -1,18 +1,18 @@
 import AVFoundation
 import Combine
 
-class AudioRecorder: NSObject, ObservableObject {
+public class AudioRecorder: NSObject, ObservableObject {
     private var recorder: AVAudioRecorder?
     private var timer: Timer?
     
-    @Published var audioLevel: Float = 0.0
-    var audioFileURL: URL?
+    @Published public var audioLevel: Float = 0.0
+    public var audioFileURL: URL?
     
-    override init() {
+    public override init() {
         super.init()
     }
     
-    func start() {
+    public func start() {
         let tempDir = FileManager.default.temporaryDirectory
         let fileName = "recording_\(UUID().uuidString).m4a"
         audioFileURL = tempDir.appendingPathComponent(fileName)
@@ -35,7 +35,7 @@ class AudioRecorder: NSObject, ObservableObject {
         }
     }
     
-    func stop() {
+    public func stop() {
         recorder?.stop()
         stopMetering()
     }
@@ -58,3 +58,4 @@ class AudioRecorder: NSObject, ObservableObject {
         timer = nil
     }
 }
+

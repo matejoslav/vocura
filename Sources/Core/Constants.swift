@@ -1,18 +1,19 @@
 import Foundation
 
-enum Constants {
-    enum UserDefaults {
-        static let customHotkey = "customHotkey"
+public enum Constants {
+    public enum UserDefaults {
+        public static let customHotkey = "customHotkey"
     }
     
-    enum Keychain {
+    public enum Keychain {
         // service name usually matches bundle identifier or app name
-        static let serviceName = "com.vocura.app" 
-        static let apiKeyAccount = "deepgramApiKey"
+        public static let serviceName = "com.vocura.app" 
+        public static let apiKeyAccount = "deepgramApiKey"
     }
     
-    enum App {
-        static let name = "Vocura"
-        static let defaultHotkeyDisplay = "⇧⌘Space"
+    public enum App {
+        public static let name = "Vocura"
+        public static let defaultHotkeyDisplay = "⇧⌘Space"
     }
 }
+

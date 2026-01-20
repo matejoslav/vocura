@@ -1,5 +1,6 @@
 import SwiftUI
 import Carbon
+import VocuraCore
 
 struct ShortcutRecorder: View {
     @Binding var shortcut: KeyShortcut?

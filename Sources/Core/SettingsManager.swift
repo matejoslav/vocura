@@ -2,10 +2,13 @@ import Foundation
 import Combine
 import SwiftUI
 
-class SettingsManager: ObservableObject {
-    static let shared = SettingsManager()
+public class SettingsManager: ObservableObject {
+    public static let shared = SettingsManager()
     
-    @Published var apiKey: String = "" {
+    /// Callback to be invoked when hotkey is triggered. Set by the UI layer.
+    public var hotkeyAction: (() -> Void)?
+    
+    @Published public var apiKey: String = "" {
         didSet {
             // Avoid infinite loop if value didn't change (though basic string compare is cheap)
             // Save to Keychain
@@ -13,7 +16,7 @@ class SettingsManager: ObservableObject {
         }
     }
     
-    @Published var hotkey: KeyShortcut? {
+    @Published public var hotkey: KeyShortcut? {
         didSet {
             saveHotkey()
         }
@@ -48,12 +51,13 @@ class SettingsManager: ObservableObject {
         }
     }
     
-    func registerHotkey() {
+    public func registerHotkey() {
         guard let hotkey = hotkey else { return }
         
         HotkeyManager.shared.unregisterAll()
-        HotkeyManager.shared.register(shortcut: hotkey) {
-             WindowManager.shared.toggleRecording()
+        HotkeyManager.shared.register(shortcut: hotkey) { [weak self] in
+            self?.hotkeyAction?()
         }
     }
 }
+

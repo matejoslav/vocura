@@ -1,11 +1,16 @@
 import SwiftUI
 import Carbon
 
-struct KeyShortcut: Codable, Equatable {
-    var keyCode: UInt16
-    var modifiers: UInt
+public struct KeyShortcut: Codable, Equatable {
+    public var keyCode: UInt16
+    public var modifiers: UInt
     
-    var description: String {
+    public init(keyCode: UInt16, modifiers: UInt) {
+        self.keyCode = keyCode
+        self.modifiers = modifiers
+    }
+    
+    public var description: String {
         var str = ""
         
         let modFlags = NSEvent.ModifierFlags(rawValue: modifiers)
@@ -63,3 +68,4 @@ struct KeyShortcut: Codable, Equatable {
         }
     }
 }
+

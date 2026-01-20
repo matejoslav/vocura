@@ -1,9 +1,19 @@
 import Foundation
 
-class STTService {
+public class STTService {
+    private let keychainService: KeychainServiceProtocol
+    private let networkService: NetworkServiceProtocol
     
-    func transcribe(audioURL: URL, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let apiKey = KeychainHelper.shared.load(), !apiKey.isEmpty else {
+    public init(
+        keychainService: KeychainServiceProtocol = KeychainHelper.shared,
+        networkService: NetworkServiceProtocol = URLSessionNetworkService.shared
+    ) {
+        self.keychainService = keychainService
+        self.networkService = networkService
+    }
+    
+    public func transcribe(audioURL: URL, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let apiKey = keychainService.load(), !apiKey.isEmpty else {
             completion(.failure(NSError(domain: "STTService", code: -3, userInfo: [NSLocalizedDescriptionKey: "Deepgram API key not set. Please open Settings."])))
             return
         }
@@ -22,7 +32,7 @@ class STTService {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        networkService.sendRequest(request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -43,19 +53,24 @@ class STTService {
             } catch {
                 completion(.failure(error))
             }
-        }.resume()
+        }
     }
 }
 
-struct DeepgramResponse: Codable {
-    struct Results: Codable {
-        struct Channel: Codable {
-            struct Alternative: Codable {
-                let transcript: String?
+public struct DeepgramResponse: Codable {
+    public struct Results: Codable {
+        public struct Channel: Codable {
+            public struct Alternative: Codable {
+                public let transcript: String?
             }
-            let alternatives: [Alternative]?
+            public let alternatives: [Alternative]?
         }
-        let channels: [Channel]?
+        public let channels: [Channel]?
     }
-    let results: Results?
+    public let results: Results?
+    
+    public init(results: Results?) {
+        self.results = results
+    }
 }
+

@@ -1,12 +1,12 @@
 import Foundation
 import Security
 
-class KeychainHelper {
-    static let shared = KeychainHelper()
+public class KeychainHelper: KeychainServiceProtocol {
+    public static let shared = KeychainHelper()
     private let service = "com.vocura.app"
     private let account = "deepgram-api-key"
     
-    func save(_ value: String) -> Bool {
+    public func save(_ value: String) -> Bool {
         guard let data = value.data(using: .utf8) else { return false }
         
         let query: [String: Any] = [
@@ -24,7 +24,7 @@ class KeychainHelper {
         return status == errSecSuccess
     }
     
-    func load() -> String? {
+    public func load() -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -43,7 +43,7 @@ class KeychainHelper {
         return nil
     }
     
-    func delete() {
+    public func delete() {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -52,3 +52,4 @@ class KeychainHelper {
         SecItemDelete(query as CFDictionary)
     }
 }
+

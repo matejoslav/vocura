@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import VocuraCore
 
 @main
 struct VocuraApp: App {
@@ -26,6 +27,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Prompt for accessibility permissions once at startup
         requestAccessibilityPermissions()
+        
+        // Set up the hotkey action (connects Core to UI)
+        SettingsManager.shared.hotkeyAction = {
+            WindowManager.shared.toggleRecording()
+        }
         
         // Initialize hotkeys via SettingsManager
         SettingsManager.shared.registerHotkey()

@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import Combine
+import VocuraCore
 
 class WindowManager: ObservableObject {
     static let shared = WindowManager()

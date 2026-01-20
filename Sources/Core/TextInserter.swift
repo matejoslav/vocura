@@ -1,8 +1,10 @@
 import AppKit
 import Accessibility
 
-class TextInserter {
-    func insert(_ text: String) {
+public class TextInserter {
+    public init() {}
+    
+    public func insert(_ text: String) {
         print("TextInserter: Attempting to insert: \(text)")
         
         // Check if we have accessibility permissions SILENTLY
