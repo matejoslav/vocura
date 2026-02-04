@@ -2,6 +2,8 @@
 
 A lightweight macOS menu bar app for voice-to-text transcription using a customizable hotkey.
 
+Note: This is an exploratory project to learn more about macOS development and Swift.
+
 ## Features
 
 - **Global Hotkey**: Press a customizable keyboard shortcut (default: ⇧⌘Space) to start/stop recording
