@@ -7,7 +7,7 @@ Note: This is an exploratory project to learn more about macOS development and S
 ## Features
 
 - **Global Hotkey**: Press a customizable keyboard shortcut (default: ⇧⌘Space) to start/stop recording
-- **Speech-to-Text**: Powered by [Deepgram](https://deepgram.com/) API for accurate transcription
+- **Speech-to-Text**: Uses [Deepgram](https://deepgram.com/) API for transcription
 - **Auto-Insert**: Automatically inserts transcribed text at your cursor position
 - **Menu Bar App**: Stays in the menu bar, never clutters your dock
 - **Secure**: API keys stored securely in macOS Keychain
