@@ -32,3 +32,5 @@ Icon
 
 # JetBrains
 .idea/
+.gitleaks.toml
+gitleaks-report.json
