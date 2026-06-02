@@ -28,12 +28,22 @@ Note: This is an exploratory project to learn more about macOS development and S
    cd vocura
    ```
 
-2. Build using Swift Package Manager:
+2. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen) (one-time):
    ```bash
-   swift build -c release
+   brew install xcodegen
    ```
 
-3. The built app will be in `.build/release/Vocura`
+3. Generate the Xcode project:
+   ```bash
+   xcodegen
+   ```
+
+4. Open `Vocura.xcodeproj` in Xcode and hit Run, or build from the command line:
+   ```bash
+   xcodebuild -project Vocura.xcodeproj -scheme Vocura -configuration Release build
+   ```
+
+   The built app will be under `~/Library/Developer/Xcode/DerivedData/.../Build/Products/Release/Vocura.app`.
 
 ## Setup
 

@@ -1,6 +1,5 @@
 import SwiftUI
 import AppKit
-import VocuraCore
 
 @main
 struct VocuraApp: App {
@@ -49,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 image.size = NSSize(width: 18, height: 18)
                 image.isTemplate = true
                 button.image = image
-            } else if let resourceURL = Bundle.module.url(forResource: "AppIcon", withExtension: "png"),
+            } else if let resourceURL = Bundle.main.url(forResource: "AppIcon", withExtension: "png"),
                       let image = NSImage(contentsOf: resourceURL) {
                 image.size = NSSize(width: 18, height: 18)
                 image.isTemplate = true

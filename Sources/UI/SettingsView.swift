@@ -1,5 +1,4 @@
 import SwiftUI
-import VocuraCore
 
 struct SettingsView: View {
     @EnvironmentObject var settingsManager: SettingsManager

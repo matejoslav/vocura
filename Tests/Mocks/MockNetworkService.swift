@@ -1,5 +1,5 @@
 import Foundation
-@testable import VocuraCore
+@testable import Vocura
 
 /// Mock Network Service for testing. Returns predefined responses without making real network calls.
 class MockNetworkService: NetworkServiceProtocol {

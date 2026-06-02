@@ -1,5 +1,5 @@
 import Foundation
-@testable import VocuraCore
+@testable import Vocura
 
 /// Mock Keychain implementation for testing. Stores values in memory.
 class MockKeychain: KeychainServiceProtocol {
