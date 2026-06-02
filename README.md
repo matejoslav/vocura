@@ -1,8 +1,14 @@
 # Vocura
 
+[![Tests](https://github.com/matejoslav/vocura/actions/workflows/tests.yml/badge.svg)](https://github.com/matejoslav/vocura/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform: macOS 14+](https://img.shields.io/badge/Platform-macOS%2014%2B-lightgrey.svg)](#requirements)
+
 A lightweight macOS menu bar app for voice-to-text transcription using a customizable hotkey.
 
-Note: This is an exploratory project to learn more about macOS development and Swift.
+Built with SwiftUI. Press a hotkey anywhere, speak, and the transcribed text is inserted at your cursor.
+
+> **Note:** This is an exploratory project to learn more about macOS development and Swift.
 
 ## Features
 
@@ -24,7 +30,7 @@ Note: This is an exploratory project to learn more about macOS development and S
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/vocura.git
+   git clone https://github.com/matejoslav/vocura.git
    cd vocura
    ```
 
@@ -44,6 +50,14 @@ Note: This is an exploratory project to learn more about macOS development and S
    ```
 
    The built app will be under `~/Library/Developer/Xcode/DerivedData/.../Build/Products/Release/Vocura.app`.
+
+### Running Tests
+
+```bash
+xcodebuild -project Vocura.xcodeproj -scheme Vocura test
+```
+
+Tests also run automatically on every push and pull request via GitHub Actions.
 
 ## Setup
 
