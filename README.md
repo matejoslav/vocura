@@ -29,27 +29,31 @@ Built with SwiftUI. Press a hotkey anywhere, speak, and the transcribed text is 
 ### Building from Source
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/matejoslav/vocura.git
    cd vocura
    ```
 
 2. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen) (one-time):
+
    ```bash
    brew install xcodegen
    ```
 
 3. Generate the Xcode project:
+
    ```bash
    xcodegen
    ```
 
 4. Open `Vocura.xcodeproj` in Xcode and hit Run, or build from the command line:
+
    ```bash
-   xcodebuild -project Vocura.xcodeproj -scheme Vocura -configuration Release build
+   xcodebuild -project Vocura.xcodeproj -scheme Vocura -configuration Release build -derivedDataPath build clean build
    ```
 
-   The built app will be under `~/Library/Developer/Xcode/DerivedData/.../Build/Products/Release/Vocura.app`.
+   The built app will be under `build/Build/Products/Release/Vocura.app`.
 
 ### Running Tests
 
