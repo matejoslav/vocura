@@ -43,5 +43,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.matejoslav.vocura.tests
+        GENERATE_INFOPLIST_FILE: YES
         BUNDLE_LOADER: "$(TEST_HOST)"
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Vocura.app/Contents/MacOS/Vocura"

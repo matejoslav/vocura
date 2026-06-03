@@ -9,18 +9,16 @@ on:
 jobs:
   test:
     runs-on: macos-14
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Setup Swift
-        uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "5.9"
-      
-      - name: Build
-        run: swift build
-      
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
       - name: Run tests
-        run: swift test
+        run: xcodebuild test -project Vocura.xcodeproj -scheme Vocura -destination 'platform=macOS'
