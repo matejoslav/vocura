@@ -1,6 +1,6 @@
 import Foundation
 
-public class STTService {
+public class STTService: SpeechToTextService {
     private let keychainService: KeychainServiceProtocol
     private let networkService: NetworkServiceProtocol
     

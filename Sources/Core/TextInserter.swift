@@ -1,7 +1,7 @@
 import AppKit
 import Accessibility
 
-public class TextInserter {
+public class TextInserter: TextInserting {
     public init() {}
     
     public func insert(_ text: String) {

@@ -1,12 +1,16 @@
 import AVFoundation
 import Combine
 
-public class AudioRecorder: NSObject, ObservableObject {
+public class AudioRecorder: NSObject, ObservableObject, AudioRecording {
     private var recorder: AVAudioRecorder?
     private var timer: Timer?
-    
+
     @Published public var audioLevel: Float = 0.0
     public var audioFileURL: URL?
+
+    public var audioLevelPublisher: AnyPublisher<Float, Never> {
+        $audioLevel.eraseToAnyPublisher()
+    }
     
     public override init() {
         super.init()

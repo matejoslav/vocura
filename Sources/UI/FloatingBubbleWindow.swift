@@ -6,24 +6,31 @@ class WindowManager: ObservableObject {
     static let shared = WindowManager()
     
     private var window: FloatingBubbleWindow?
-    private let recorder = AudioRecorder()
-    private let sttService = STTService()
-    private let textInserter = TextInserter()
-    
+    private let recorder: AudioRecording
+    private let sttService: SpeechToTextService
+    private let textInserter: TextInserting
+
     @Published var isRecording = false
     @Published var isProcessing = false
     @Published var statusMessage: String?
     @Published var audioLevel: Float = 0.0
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
-    init() {
+
+    init(
+        recorder: AudioRecording = AudioRecorder(),
+        sttService: SpeechToTextService = STTService(),
+        textInserter: TextInserting = TextInserter()
+    ) {
+        self.recorder = recorder
+        self.sttService = sttService
+        self.textInserter = textInserter
         setupWindow()
         setupBindings()
     }
-    
+
     private func setupBindings() {
-        recorder.$audioLevel
+        recorder.audioLevelPublisher
             .receive(on: DispatchQueue.main)
             .assign(to: \.audioLevel, on: self)
             .store(in: &cancellables)
