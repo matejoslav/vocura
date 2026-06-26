@@ -56,13 +56,10 @@ class WindowManager: ObservableObject {
         // Calculate fitting size
         let fittingSize = hostingView.fittingSize
         
-        // Update window frame while keeping it at the same bottom-left corner (or relative position)
+        // Keep the indicator centered along the bottom of the screen
         if let screen = NSScreen.main {
-            let screenRect = screen.visibleFrame
-            let x = screenRect.minX + 20
-            let y = screenRect.minY + 20
-            
-            let newFrame = NSRect(x: x, y: y, width: fittingSize.width, height: fittingSize.height)
+            let origin = BubblePositioner.origin(screenFrame: screen.visibleFrame, windowSize: fittingSize)
+            let newFrame = NSRect(origin: origin, size: fittingSize)
             window.setFrame(newFrame, display: true, animate: true)
         }
     }
@@ -132,21 +129,20 @@ class FloatingBubbleWindow: NSPanel {
         self.isFloatingPanel = true
         self.level = .floating
         self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        self.isMovableByWindowBackground = true
+        self.isMovableByWindowBackground = false
+        self.isMovable = false
         self.backgroundColor = .clear
         self.hasShadow = true
         self.alphaValue = 0.0
         
-        // Position at bottom-left
+        // Position centered along the bottom of the screen
         updatePosition()
     }
-    
+
     private func updatePosition() {
         if let screen = NSScreen.main {
-            let screenRect = screen.visibleFrame
-            let x = screenRect.minX + 20
-            let y = screenRect.minY + 20
-            self.setFrameOrigin(NSPoint(x: x, y: y))
+            let origin = BubblePositioner.origin(screenFrame: screen.visibleFrame, windowSize: self.frame.size)
+            self.setFrameOrigin(origin)
         }
     }
     
