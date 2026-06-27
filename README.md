@@ -18,6 +18,16 @@ Built with SwiftUI. Press a hotkey anywhere, speak, and the transcribed text is 
 - **Menu Bar App**: Stays in the menu bar, never clutters your dock
 - **Secure**: API keys stored securely in macOS Keychain
 
+## Supported Speech-to-Text Technologies
+
+Vocura is designed to support multiple speech-to-text (STT) backends. The table below tracks what is currently available and what is planned.
+
+| Provider | Status | Notes |
+| --- | --- | --- |
+| [Deepgram](https://deepgram.com/) | ✅ Supported | Cloud API, uses the `nova-2` model with smart formatting |
+
+> More providers are planned. The goal is to let you choose between different cloud services and on-device transcription. Contributions and suggestions are welcome.
+
 ## Requirements
 
 - macOS 14.0 (Sonoma) or later
