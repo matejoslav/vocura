@@ -6,6 +6,7 @@
 set -euo pipefail
 
 APP_NAME="Vocura"
+BUNDLE_ID="dev.matejoslav.vocura"
 DERIVED="build/install-derived-data"
 
 # Always run from the repo root (one level up from this script).
@@ -42,6 +43,13 @@ sleep 1
 echo "==> Installing to /Applications/$APP_NAME.app"
 rm -rf "/Applications/$APP_NAME.app"
 cp -R "$APP_PATH" "/Applications/$APP_NAME.app"
+
+# Clear the stale Accessibility grant for THIS app only (scoped by bundle id).
+# Ad-hoc builds change signature each time, so the old grant points at a binary
+# that no longer exists; resetting removes the orphan so you get one clean prompt
+# instead of having to manually delete the old entry. Affects only $BUNDLE_ID.
+echo "==> Resetting Accessibility permission for $BUNDLE_ID"
+tccutil reset Accessibility "$BUNDLE_ID" || true
 
 echo "==> Launching $APP_NAME"
 open "/Applications/$APP_NAME.app"
