@@ -1,5 +1,5 @@
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Mock TextInserter for testing. Captures inserted text without touching the pasteboard.
 class MockTextInserter: TextInserting {

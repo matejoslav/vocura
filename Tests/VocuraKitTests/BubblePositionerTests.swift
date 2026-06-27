@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for the floating indicator's on-screen positioning
 final class BubblePositionerTests: XCTestCase {

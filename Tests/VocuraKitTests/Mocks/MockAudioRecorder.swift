@@ -1,6 +1,6 @@
 import Foundation
 import Combine
-@testable import Vocura
+@testable import VocuraKit
 
 /// Mock AudioRecorder for testing. Records interactions without touching real audio hardware.
 class MockAudioRecorder: AudioRecording {

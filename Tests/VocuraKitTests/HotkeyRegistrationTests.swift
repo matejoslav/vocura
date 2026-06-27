@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for SettingsManager registering hotkeys via an injected hotkey manager.
 final class HotkeyRegistrationTests: XCTestCase {

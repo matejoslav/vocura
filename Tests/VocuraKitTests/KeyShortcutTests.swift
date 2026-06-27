@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for KeyShortcut struct
 final class KeyShortcutTests: XCTestCase {

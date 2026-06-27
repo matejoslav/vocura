@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import VocuraKit
 
 @main
 struct VocuraApp: App {
@@ -18,24 +19,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Skip launch-time wiring (Keychain read, hotkey registration) under tests.
-        guard !Constants.Environment.isRunningTests else { return }
-
         setupMenuBar()
 
         // Ensure the app doesn't show in the dock
         NSApp.setActivationPolicy(.accessory)
-        
+
         // Prompt for accessibility permissions once at startup
         requestAccessibilityPermissions()
-        
-        // Set up the hotkey action (connects Core to UI)
+
+        // Connect Core to UI. Settings load + hotkey registration already
+        // happened in SettingsManager.init; the registered closure reads
+        // hotkeyAction lazily, so setting it here is sufficient.
         SettingsManager.shared.hotkeyAction = {
             WindowManager.shared.toggleRecording()
         }
-
-        // Load persisted settings and register hotkeys (performs Keychain I/O)
-        SettingsManager.shared.bootstrap()
     }
     
     private func requestAccessibilityPermissions() {

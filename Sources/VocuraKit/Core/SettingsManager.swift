@@ -31,11 +31,6 @@ public class SettingsManager: ObservableObject {
     ) {
         self.keychainService = keychainService
         self.hotkeyManager = hotkeyManager
-    }
-
-    /// Loads persisted settings (Keychain + hotkey) and registers the hotkey.
-    /// Kept out of `init` so constructing the singleton performs no I/O.
-    public func bootstrap() {
         loadSettings()
     }
 
