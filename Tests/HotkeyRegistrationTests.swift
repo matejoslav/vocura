@@ -18,6 +18,7 @@ final class HotkeyRegistrationTests: XCTestCase {
     func testRegisterHotkeyClearsPreviousRegistrations() {
         let mockHotkey = MockHotkeyManager()
         let manager = SettingsManager(keychainService: MockKeychain(), hotkeyManager: mockHotkey)
+        manager.hotkey = KeyShortcut(keyCode: 49, modifiers: 0)
         let before = mockHotkey.unregisterAllCallCount
 
         manager.registerHotkey()

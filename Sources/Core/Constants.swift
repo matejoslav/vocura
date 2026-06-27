@@ -15,5 +15,12 @@ public enum Constants {
         public static let name = "Vocura"
         public static let defaultHotkeyDisplay = "⇧⌘Space"
     }
+
+    public enum Environment {
+        /// True when the process is hosting an XCTest run, used to skip real I/O at app launch.
+        public static var isRunningTests: Bool {
+            ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        }
+    }
 }
 

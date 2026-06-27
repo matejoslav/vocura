@@ -4,7 +4,6 @@ import AppKit
 @main
 struct VocuraApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    // Ensure SettingsManager is initialized
     @StateObject private var settingsManager = SettingsManager.shared
     
     var body: some Scene {
@@ -19,8 +18,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Skip launch-time wiring (Keychain read, hotkey registration) under tests.
+        guard !Constants.Environment.isRunningTests else { return }
+
         setupMenuBar()
-        
+
         // Ensure the app doesn't show in the dock
         NSApp.setActivationPolicy(.accessory)
         
@@ -31,9 +33,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         SettingsManager.shared.hotkeyAction = {
             WindowManager.shared.toggleRecording()
         }
-        
-        // Initialize hotkeys via SettingsManager
-        SettingsManager.shared.registerHotkey()
+
+        // Load persisted settings and register hotkeys (performs Keychain I/O)
+        SettingsManager.shared.bootstrap()
     }
     
     private func requestAccessibilityPermissions() {
