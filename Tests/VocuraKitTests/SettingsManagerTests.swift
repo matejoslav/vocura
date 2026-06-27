@@ -5,12 +5,10 @@ import Foundation
 /// Tests for SettingsManager's API key persistence via an injected keychain.
 final class SettingsManagerTests: XCTestCase {
 
-    func testLoadsAPIKeyFromKeychainOnBootstrap() {
+    func testLoadsAPIKeyFromKeychainOnInit() {
         let mockKeychain = MockKeychain()
         mockKeychain.mockValue = "stored-key"
         let manager = SettingsManager(keychainService: mockKeychain, hotkeyManager: MockHotkeyManager())
-
-        manager.bootstrap()
 
         XCTAssertEqual(manager.apiKey, "stored-key")
     }
@@ -19,8 +17,6 @@ final class SettingsManagerTests: XCTestCase {
         let mockKeychain = MockKeychain()
         mockKeychain.mockValue = nil
         let manager = SettingsManager(keychainService: mockKeychain, hotkeyManager: MockHotkeyManager())
-
-        manager.bootstrap()
 
         XCTAssertEqual(manager.apiKey, "")
     }

@@ -16,13 +16,5 @@ public enum Constants {
         public static let defaultHotkeyDisplay = "⇧⌘Space"
     }
 
-    public enum Environment {
-        /// True when the process is hosting an XCTest run, used to skip real I/O at app launch.
-        /// Checks both the Xcode-hosted env var and runtime class presence (swift test).
-        public static var isRunningTests: Bool {
-            ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil ||
-            NSClassFromString("XCTestCase") != nil
-        }
-    }
 }
 
