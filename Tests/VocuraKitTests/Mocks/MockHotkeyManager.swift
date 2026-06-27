@@ -1,5 +1,5 @@
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Mock hotkey manager for testing. Captures registrations without touching Carbon APIs.
 class MockHotkeyManager: HotkeyManaging {

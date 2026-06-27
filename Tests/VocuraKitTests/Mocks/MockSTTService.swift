@@ -1,5 +1,5 @@
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Mock STT service for testing. Returns a predefined transcription result.
 class MockSTTService: SpeechToTextService {

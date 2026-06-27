@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for WindowManager's recording orchestration with injected dependencies.
 final class WindowManagerTests: XCTestCase {

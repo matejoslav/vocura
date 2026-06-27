@@ -2,8 +2,8 @@ import SwiftUI
 import AppKit
 import Combine
 
-class WindowManager: ObservableObject {
-    static let shared = WindowManager()
+public class WindowManager: ObservableObject {
+    public static let shared = WindowManager()
     
     private var window: FloatingBubbleWindow?
     private let recorder: AudioRecording
@@ -71,7 +71,7 @@ class WindowManager: ObservableObject {
         }
     }
     
-    func toggleRecording() {
+    public func toggleRecording() {
         if isRecording {
             stopRecording()
         } else {

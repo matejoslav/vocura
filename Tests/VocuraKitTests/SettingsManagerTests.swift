@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for SettingsManager's API key persistence via an injected keychain.
 final class SettingsManagerTests: XCTestCase {

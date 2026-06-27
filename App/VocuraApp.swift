@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import VocuraKit
 
 @main
 struct VocuraApp: App {

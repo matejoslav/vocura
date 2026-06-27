@@ -1,10 +1,12 @@
 import SwiftUI
 
-struct SettingsView: View {
+public struct SettingsView: View {
     @EnvironmentObject var settingsManager: SettingsManager
     @State private var showingSaveSuccess = false
-    
-    var body: some View {
+
+    public init() {}
+
+    public var body: some View {
         Form {
             Section {
                 SecureField("Deepgram API Key", text: $settingsManager.apiKey)

@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for STTService with mocked dependencies
 final class STTServiceTests: XCTestCase {

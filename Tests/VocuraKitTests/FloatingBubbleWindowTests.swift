@@ -1,6 +1,6 @@
 import XCTest
 import AppKit
-@testable import Vocura
+@testable import VocuraKit
 
 /// Tests for the floating indicator window's behavior
 final class FloatingBubbleWindowTests: XCTestCase {
