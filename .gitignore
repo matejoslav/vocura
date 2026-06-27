@@ -28,3 +28,9 @@ build/
 .gitleaks.toml
 gitleaks-report.json
 CLAUDE.md
+
+# SwiftPM local metadata (regenerated)
+.swiftpm/
+
+# Claude Code / superpowers scratch
+.superpowers/
