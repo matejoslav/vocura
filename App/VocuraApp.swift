@@ -35,6 +35,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        // Menu-bar accessory app: closing the Settings window should just hide it,
+        // not quit. The app keeps running and is reopened via the "Settings..." menu.
+        false
+    }
+
     private func requestAccessibilityPermissions() {
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
         AXIsProcessTrustedWithOptions(options as CFDictionary)
