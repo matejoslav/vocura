@@ -1,7 +1,7 @@
 import AppKit
 import Carbon
 
-class HotkeyManager {
+class HotkeyManager: HotkeyManaging {
     static let shared = HotkeyManager()
     
     typealias HotkeyAction = () -> Void

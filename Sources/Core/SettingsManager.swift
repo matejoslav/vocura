@@ -4,15 +4,18 @@ import SwiftUI
 
 public class SettingsManager: ObservableObject {
     public static let shared = SettingsManager()
-    
+
+    private let keychainService: KeychainServiceProtocol
+    private let hotkeyManager: HotkeyManaging
+
     /// Callback to be invoked when hotkey is triggered. Set by the UI layer.
     public var hotkeyAction: (() -> Void)?
-    
+
     @Published public var apiKey: String = "" {
         didSet {
             // Avoid infinite loop if value didn't change (though basic string compare is cheap)
             // Save to Keychain
-            _ = KeychainHelper.shared.save(apiKey)
+            _ = keychainService.save(apiKey)
         }
     }
     
@@ -22,13 +25,18 @@ public class SettingsManager: ObservableObject {
         }
     }
     
-    private init() {
+    init(
+        keychainService: KeychainServiceProtocol = KeychainHelper.shared,
+        hotkeyManager: HotkeyManaging = HotkeyManager.shared
+    ) {
+        self.keychainService = keychainService
+        self.hotkeyManager = hotkeyManager
         loadSettings()
     }
-    
+
     private func loadSettings() {
         // Load API Key
-        if let savedKey = KeychainHelper.shared.load() {
+        if let savedKey = keychainService.load() {
             self.apiKey = savedKey
         }
         
@@ -54,8 +62,8 @@ public class SettingsManager: ObservableObject {
     public func registerHotkey() {
         guard let hotkey = hotkey else { return }
         
-        HotkeyManager.shared.unregisterAll()
-        HotkeyManager.shared.register(shortcut: hotkey) { [weak self] in
+        hotkeyManager.unregisterAll()
+        hotkeyManager.register(shortcut: hotkey) { [weak self] in
             self?.hotkeyAction?()
         }
     }
