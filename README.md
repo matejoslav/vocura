@@ -25,6 +25,8 @@ Vocura is designed to support multiple speech-to-text (STT) backends. The table 
 | Provider | Status | Notes |
 | --- | --- | --- |
 | [Deepgram](https://deepgram.com/) | ✅ Supported | Cloud API, uses the `nova-2` model with smart formatting |
+| [Apple SpeechAnalyzer](https://developer.apple.com/documentation/speech/speechanalyzer) | 🚧 Planned | On-device, no API key or network; requires macOS 26+ |
+| [WhisperKit](https://github.com/argmaxinc/WhisperKit) | 🚧 Planned | On-device Whisper (Core ML), no API key or network; macOS 14+ |
 
 > More providers are planned. The goal is to let you choose between different cloud services and on-device transcription. Contributions and suggestions are welcome.
 
